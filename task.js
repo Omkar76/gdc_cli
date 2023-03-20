@@ -106,12 +106,14 @@ void function main(){
     cobalt.addCommand("add", [
         {
         validator : (priority)=>{
-            // Commenting for the sake of test cases
+            if(priority === undefined){
+                return "Missing task priority."
+            }
 
             priority = +priority;
 
-            if(isNaN(priority) || !Number.isInteger(+priority) || priority < 0){
-                return "Error: Priority must be non-zero interger!"
+            if(isNaN(priority) || !Number.isInteger(priority) || priority < 0){
+                return "Priority must be non-zero interger!"
             }
         }
         },
@@ -129,7 +131,13 @@ void function main(){
     cobalt.addCommand("help", [], displayHelp);
     cobalt.addCommand(undefined, [], displayHelp);
     cobalt.addCommand("ls", [], displayPendingTasks);
-    cobalt.addCommand("del", [], deleteTodo);
+    cobalt.addCommand("del", [{
+        validator : function(index){
+            if(!index){
+                return "Missing NUMBER for deleting tasks.";
+            }
+        }
+    }], deleteTodo);
     // cobalt.addCommand("done", [], done);
     // cobalt.addCommand("report", [],  done);
     cobalt.exec(process.argv[2], process.argv.slice(3));
