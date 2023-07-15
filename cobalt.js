@@ -19,7 +19,7 @@ class Cobalt {
       if (!this.missingCommandHandler) {
         this.defaultMissingCommandHandler(cmd);
       } else {
-        this.missingCommandHandler();
+        this.missingCommandHandler(cmd);
       }
       return;
     }

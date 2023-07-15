@@ -6,6 +6,11 @@ const commandHandlers = require("./commandHandlers");
 
 void (function main() {
   const cobalt = new Cobalt();
+  cobalt.missingCommandHandler = function (cmd) {
+    console.log("Invalid command :-", cmd);
+    commandHandlers.displayHelp();
+  };
+
   cobalt.addCommand("help", [], commandHandlers.displayHelp);
   cobalt.addCommand(undefined, [], commandHandlers.displayHelp);
 
