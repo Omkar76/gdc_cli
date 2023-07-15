@@ -7,14 +7,6 @@ const Cobalt = require('./cobalt');
 const completedTasksFile = path.resolve(process.cwd(), "completed.txt");
 const pendingTasksFile = path.resolve(process.cwd(), "task.txt");
 
-class Task{
-    constructor(index, note, priority){
-        this.index = index;
-        this.note = note;
-        this.priority = priority;
-    }
-}
-
 function displayHelp(){
     console.log(
         `Usage :-
@@ -26,6 +18,7 @@ $ ./task help                 # Show usage
 $ ./task report               # Statistics`
         );
 }
+
 function addTask(priority, ...descriptionWords){
     const description = descriptionWords.join(" ");
     fs.appendFileSync(pendingTasksFile, `${priority} ${description}\n`);
@@ -80,6 +73,7 @@ function getCompetedTasks(){
 
     return completedTasks;
 }
+
 function displayPendingTasks(index){
     const pendingTasks = getPendingTasks();
 
@@ -147,6 +141,7 @@ function displayReport(){
         console.log(`${index+1}. ${task.description.trim()}`);
     })
 }
+
 void function main(){ 
     const cobalt = new Cobalt();    
 
