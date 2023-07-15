@@ -133,8 +133,8 @@ test("delete first task 3 times", () => {
     "water the plants",
     "find needle in the haystack",
   ];
-  
-  tasks.forEach((tasks, i) =>execSync(tasksTxtCli("add", `${i} "${tasks}"`)));
+
+  tasks.forEach((tasks, i) => execSync(tasksTxtCli("add", `${i} "${tasks}"`)));
 
   [1, 1, 1].forEach((n) => {
     let expected = `Deleted task #${n}`;
