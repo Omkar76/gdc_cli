@@ -73,7 +73,7 @@ function displayPendingTasks(index){
     });
 }
 
-function deleteTodo(indexToDelete){
+function deleteTask(indexToDelete){
     const pendingTasks = getPendingTasks();
     if(pendingTasks.length == 0){
         console.log("There are no pending tasks!\n");
@@ -137,7 +137,7 @@ void function main(){
                 return "Missing NUMBER for deleting tasks.";
             }
         }
-    }], deleteTodo);
+    }], deleteTask);
     // cobalt.addCommand("done", [], done);
     // cobalt.addCommand("report", [],  done);
     cobalt.exec(process.argv[2], process.argv.slice(3));
