@@ -60,6 +60,26 @@ function getPendingTasks(){
     return pendingTasks;
 }
 
+function getCompetedTasks(){
+    let fileText = "";
+    try{
+        fileText = fs.readFileSync(completedTasksFile).toString().trim();
+    }catch(e){
+        return [];
+    }
+
+    if(!fileText){
+        return [];
+    }
+
+    const lines = fileText.split("\n");
+
+    const completedTasks = lines.map(line=>{
+        return {description : line};
+    })
+
+    return completedTasks;
+}
 function displayPendingTasks(index){
     const pendingTasks = getPendingTasks();
 
@@ -81,25 +101,52 @@ function deleteTask(indexToDelete){
     }
 
     let newFileContent = "";
-    let lineDeleted = false;
+    let deletedTask = null;
     pendingTasks.forEach((task, index) => {
         // for user, indexing starts at 1
 
         if(index  + 1 != +indexToDelete){
             newFileContent += `${task.priority} ${task.description}\n`;
         }else{
-            lineDeleted = true;
+            deletedTask = task;
         }
     });
 
-    if(lineDeleted){
+    if(deletedTask){
         fs.writeFileSync(pendingTasksFile, newFileContent);
         console.log(`Deleted task #${indexToDelete}`); 
     }else{
         console.log(`Error: task with index #${indexToDelete} does not exist. Nothing deleted.`);
+    }    
+    
+    return deletedTask;
+}
+
+function markTaskAsDone(index){
+    const deletedTask =deleteTask(index);
+    if(deletedTask){
+        fs.appendFileSync(completedTasksFile, deletedTask.description + "\n");
+        console.log("Marked item as done.");
+    }else{
+        console.log(`Error: no incomplete item with index #${index} exists.`);
     }
 }
 
+function displayReport(){
+    const pendingTasks = getPendingTasks();
+    const completedTasks = getCompetedTasks();
+
+    console.log("Pending :", pendingTasks.length);
+    pendingTasks.forEach((task, index)=>{
+        console.log(`${index+1}. ${task.description.trim()} [${task.priority}]`);
+    });
+
+    console.log("\nCompleted :", completedTasks.length);
+    
+    completedTasks.forEach((task, index)=>{
+        console.log(`${index+1}. ${task.description.trim()}`);
+    })
+}
 void function main(){ 
     const cobalt = new Cobalt();    
 
@@ -138,8 +185,14 @@ void function main(){
             }
         }
     }], deleteTask);
-    // cobalt.addCommand("done", [], done);
-    // cobalt.addCommand("report", [],  done);
+    cobalt.addCommand("done", [{
+        validator : function(index){
+            if(index===undefined){
+                return "Missing NUMBER for marking tasks as done.";
+            }
+        }
+    }], markTaskAsDone);
+    cobalt.addCommand("report", [],  displayReport);
     cobalt.exec(process.argv[2], process.argv.slice(3));
 }();
 
