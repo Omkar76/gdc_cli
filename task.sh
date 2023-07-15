@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-node task.js "$@"
+node "$(dirname $0)/task.js" "$@"
